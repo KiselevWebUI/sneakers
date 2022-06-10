@@ -1,1 +1,13 @@
 npx create-react-app react-sneakers
+
+
+npm install node-sass
+npm install macro-css
+
+git remote add origin https://github.com/KiselevWebUI/sneakers.git
+
+git add .
+
+git commit -m "commit"
+
+git push origin master
