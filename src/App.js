@@ -1,25 +1,27 @@
 import Header from './components/Header';
 import Card from './components/Card';
 import Drawer from './components/Drawer';
-
-const arr = [
-  {name: "Мужские Кроссовки Nike Blazer Mid Suede", price: 12999, pic: "/img/sneakers/1.jpg"},
-  {name: "Мужские Кроссовки Nike Air Max 270", price: 15600 , pic: "/img/sneakers/2.jpg"},
-  {name: "Мужские Кроссовки Nike Blazer Mid Suede", price: 12999, pic: "/img/sneakers/3.jpg"},
-  {name: "Кроссовки Puma X Aka Boku Future Rider", price: 12999, pic: "/img/sneakers/4.jpg"},
-  {name: "Кроссовки Future Rider", price: 12999, pic: "/img/sneakers/5.jpg"},
-  {name: "Кроссовки Black Edition", price: 12999, pic: "/img/sneakers/6.jpg"},
-  {name: "Кроссовки Orange Boomb Edition", price: 12999, pic: "/img/sneakers/7.jpg"}
-];
+import { useEffect, useState } from 'react';
 
 function App() {
+  const [items, seItems] = useState([]);
+  const [drawerOpened, setDrawerOpened] = useState(false);
+
+  useEffect(() => {
+    fetch('https://62c533e6134fa108c24ac769.mockapi.io/items')
+    .then((res) => {
+      return res.json();
+    })
+    .then((json) => {
+      seItems(json)
+    })
+  }, [])
+
   return (
     <div className="wrapper clear">
-      
-      <Drawer/>
 
-      <Header/>
-
+      {drawerOpened && <Drawer onCloseDrawer = {() => setDrawerOpened(false)}/>}
+      <Header onClickCart = {() => setDrawerOpened(true)}/>
       <div className="content p-40">
         <div className="d-flex align-center justify-between mb-40">
           <h1>Все кроссовки</h1>
@@ -29,11 +31,18 @@ function App() {
           </div>
         </div>
 
-        <div className="d-flex">
+        <div className="d-flex flex-wrap">
 
           {
-            arr.map((obj) => (
-              <Card title={obj.name} price={obj.price} imgUrl={obj.pic} click={() => console.log(obj)}/>
+            items.map((obj) => (
+              <Card 
+              key={'key_' + obj.key}
+              title={obj.name} 
+              price={obj.price} 
+              imgUrl={obj.pic} 
+              onClickFavorite={() => console.log('Кликнули на фаворитов', obj)}
+              onClickPlus={() => console.log('Кликнули на добавление', obj)}
+              />
             ))
           }
         
