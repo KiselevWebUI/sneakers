@@ -1,4 +1,4 @@
-function Drawer(props){
+function Drawer({onCloseDrawer, items = []}){
     return (
       <div className="overlay">
 
@@ -6,18 +6,22 @@ function Drawer(props){
           
           <h2 className="d-flex justify-between mb-30">
             Корзина
-            <img className="removeBtn" src="/img/btn-remove.svg" alt="Close" onClick={props.onCloseDrawer}/>
+            <img className="removeBtn" src="/img/btn-remove.svg" alt="Close" onClick={onCloseDrawer}/>
           </h2>
 
           <div className="items flex">
-            <div className="cartItem d-flex align-center">
-              <img className="mr-10" src="/img/sneakers/1.jpg" width={70} alt=""/>
-              <div className="mr-20">
-                <p className="mb-5">Мужские Кроссовки Nike Blazer Mid Suede</p>
-                <b>1205 руб</b>
-              </div>
-              <img className="removeBtn" src="/img/btn-remove.svg" alt="Plus"/>
-            </div>
+            {
+              items.map((obj) => (
+                <div className="cartItem d-flex align-center" key={'drw_' + obj.key}>
+                  <img className="mr-10" src={obj.pic} width={70} alt=""/>
+                  <div className="mr-20">
+                    <p className="mb-5">{obj.name}</p>
+                    <b>{obj.price} руб.</b>
+                  </div>
+                  <img className="removeBtn" src="/img/btn-remove.svg" alt="Plus"/>
+                </div>
+              ))
+            }
           </div>
 
           <div className="cartTotalBlock">

@@ -4,7 +4,8 @@ import Drawer from './components/Drawer';
 import { useEffect, useState } from 'react';
 
 function App() {
-  const [items, seItems] = useState([]);
+  const [items, setItems] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
   const [drawerOpened, setDrawerOpened] = useState(false);
 
   useEffect(() => {
@@ -13,14 +14,25 @@ function App() {
       return res.json();
     })
     .then((json) => {
-      seItems(json)
+      setItems(json)
     })
-  }, [])
+  }, []);
+
+  const onAddToCart = (obj) => {
+    //let curr = cartItems.filter((i) => i.key !== obj.key);
+    //console.log('curr', curr)
+    console.log(cartItems.find((i) => i.key === obj.key))
+
+    if(!cartItems.find((i) => i.key === obj.key)) setCartItems(prev => [...prev, obj]);
+    else setCartItems(prev => prev.filter(i => i.key !== obj.key));
+  }
+
+  console.log(cartItems);
 
   return (
     <div className="wrapper clear">
 
-      {drawerOpened && <Drawer onCloseDrawer = {() => setDrawerOpened(false)}/>}
+      {drawerOpened && <Drawer items = {cartItems} onCloseDrawer = {() => setDrawerOpened(false)}/>}
       <Header onClickCart = {() => setDrawerOpened(true)}/>
       <div className="content p-40">
         <div className="d-flex align-center justify-between mb-40">
@@ -34,14 +46,14 @@ function App() {
         <div className="d-flex flex-wrap">
 
           {
-            items.map((obj) => (
+            items.map((item) => (
               <Card 
-              key={'key_' + obj.key}
-              title={obj.name} 
-              price={obj.price} 
-              imgUrl={obj.pic} 
-              onClickFavorite={() => console.log('Кликнули на фаворитов', obj)}
-              onClickPlus={() => console.log('Кликнули на добавление', obj)}
+              key={'key_' + item.key}
+              title={item.name} 
+              price={item.price} 
+              imgUrl={item.pic} 
+              onFavorite={() => console.log('Кликнули на фаворитов', item)}
+              onPlus={() => onAddToCart(item)}
               />
             ))
           }
